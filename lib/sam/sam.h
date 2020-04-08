@@ -1,6 +1,10 @@
 #ifndef SAM_H
 #define SAM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void SetInput(char *_input);
 void SetSpeed(unsigned char _speed);
 void SetPitch(unsigned char _pitch);
@@ -34,5 +38,9 @@ int GetBufferLength();
 
 //unsigned char input[]={" EYAYOYAWOWUW ULUMUNQ YXWXRXLX/XDX\x9b\0"};
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
