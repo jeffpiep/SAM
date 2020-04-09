@@ -36,8 +36,12 @@ void test1()
 void test2()
 {
   dacWrite(DAC1,value++);
-
   delayMicroseconds(value>>3);
+}
+
+void test3()
+{
+  dacWrite(DAC1,(value++ > 127) ? 0 : 255);
 }
 
 // the setup function runs once when you press reset or power the board
@@ -49,5 +53,6 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   //test1();
-  test2();
+  //test2();
+  test3();
 }
