@@ -1,10 +1,9 @@
-THIS IS A FORK OF SAM TO TEST MAKING IT INTO A LIBRARY FOR C++ IN PLATFORMIO
-
 SAM
 ===
 
-Software Automatic Mouth - Tiny Speech Synthesizer 
+THIS IS A FORK OF SAM TO TEST MAKING IT INTO A LIBRARY FOR C++ IN PLATFORMIO
 
+Software Automatic Mouth - Tiny Speech Synthesizer
 
 What is SAM?
 ============
