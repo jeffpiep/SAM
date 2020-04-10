@@ -1,3 +1,9 @@
+#ifdef ESP_32
+
+#include <Arduino.h>
+
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -12,13 +18,16 @@
 #include <SDL_audio.h>
 #endif
 
-void WriteWav(char* filename, char* buffer, int bufferlength)
+#ifndef ESP_32
+
+void WriteWav(char *filename, char *buffer, int bufferlength)
 {
     FILE *file = fopen(filename, "wb");
-    if (file == NULL) return;
+    if (file == NULL)
+        return;
     //RIFF header
-    fwrite("RIFF", 4, 1,file);
-    unsigned int filesize=bufferlength + 12 + 16 + 8 - 8;
+    fwrite("RIFF", 4, 1, file);
+    unsigned int filesize = bufferlength + 12 + 16 + 8 - 8;
     fwrite(&filesize, 4, 1, file);
     fwrite("WAVE", 4, 1, file);
 
@@ -26,16 +35,16 @@ void WriteWav(char* filename, char* buffer, int bufferlength)
     fwrite("fmt ", 4, 1, file);
     unsigned int fmtlength = 16;
     fwrite(&fmtlength, 4, 1, file);
-    unsigned short int format=1; //PCM
+    unsigned short int format = 1; //PCM
     fwrite(&format, 2, 1, file);
-    unsigned short int channels=1;
+    unsigned short int channels = 1;
     fwrite(&channels, 2, 1, file);
     unsigned int samplerate = 22050;
     fwrite(&samplerate, 4, 1, file);
     fwrite(&samplerate, 4, 1, file); // bytes/second
     unsigned short int blockalign = 1;
     fwrite(&blockalign, 2, 1, file);
-    unsigned short int bitspersample=8;
+    unsigned short int bitspersample = 8;
     fwrite(&bitspersample, 2, 1, file);
 
     //data chunk
@@ -45,6 +54,8 @@ void WriteWav(char* filename, char* buffer, int bufferlength)
 
     fclose(file);
 }
+
+#endif // ESP_32
 
 void PrintUsage()
 {
@@ -59,7 +70,6 @@ void PrintUsage()
     printf("    -sing            special treatment of pitch\n");
     printf("    -debug            print additional debug messages\n");
     printf("\n");
-
 
     printf("     VOWELS                            VOICED CONSONANTS    \n");
     printf("IY           f(ee)t                    R        red        \n");
@@ -100,15 +110,16 @@ void MixAudio(void *unused, Uint8 *stream, int len)
     int bufferpos = GetBufferLength();
     char *buffer = GetBuffer();
     int i;
-    if (pos >= bufferpos) return;
-    if ((bufferpos-pos) < len) len = (bufferpos-pos);
-    for(i=0; i<len; i++)
+    if (pos >= bufferpos)
+        return;
+    if ((bufferpos - pos) < len)
+        len = (bufferpos - pos);
+    for (i = 0; i < len; i++)
     {
         stream[i] = buffer[pos];
         pos++;
     }
 }
-
 
 void OutputSound()
 {
@@ -124,7 +135,7 @@ void OutputSound()
     fmt.userdata = NULL;
 
     /* Open the audio device and start playing sound! */
-    if ( SDL_OpenAudio(&fmt, NULL) < 0 )
+    if (SDL_OpenAudio(&fmt, NULL) < 0)
     {
         printf("Unable to open audio: %s\n", SDL_GetError());
         exit(1);
@@ -142,7 +153,9 @@ void OutputSound()
 
 #else
 
-void OutputSound() {}
+void OutputSound()
+{
+}
 
 #endif
 
@@ -153,10 +166,11 @@ int main(int argc, char **argv)
     int i;
     int phonetic = 0;
 
-    char* wavfilename = NULL;
+    char *wavfilename = NULL;
     char input[256];
 
-    for(i=0; i<256; i++) input[i] = 0;
+    for (i = 0; i < 256; i++)
+        input[i] = 0;
 
     if (argc <= 1)
     {
@@ -165,51 +179,53 @@ int main(int argc, char **argv)
     }
 
     i = 1;
-    while(i < argc)
+    while (i < argc)
     {
         if (argv[i][0] != '-')
         {
             strncat(input, argv[i], 255);
             strncat(input, " ", 255);
-        } else
+        }
+        else
         {
-            if (strcmp(&argv[i][1], "wav")==0)
+            if (strcmp(&argv[i][1], "wav") == 0)
             {
-                wavfilename = argv[i+1];
+                wavfilename = argv[i + 1];
                 i++;
-            } else
-            if (strcmp(&argv[i][1], "sing")==0)
+            }
+            else if (strcmp(&argv[i][1], "sing") == 0)
             {
                 EnableSingmode();
-            } else
-            if (strcmp(&argv[i][1], "phonetic")==0)
+            }
+            else if (strcmp(&argv[i][1], "phonetic") == 0)
             {
                 phonetic = 1;
-            } else
-            if (strcmp(&argv[i][1], "debug")==0)
+            }
+            else if (strcmp(&argv[i][1], "debug") == 0)
             {
                 debug = 1;
-            } else
-            if (strcmp(&argv[i][1], "pitch")==0)
+            }
+            else if (strcmp(&argv[i][1], "pitch") == 0)
             {
-                SetPitch(atoi(argv[i+1]));
+                SetPitch(atoi(argv[i + 1]));
                 i++;
-            } else
-            if (strcmp(&argv[i][1], "speed")==0)
+            }
+            else if (strcmp(&argv[i][1], "speed") == 0)
             {
-                SetSpeed(atoi(argv[i+1]));
+                SetSpeed(atoi(argv[i + 1]));
                 i++;
-            } else
-            if (strcmp(&argv[i][1], "mouth")==0)
+            }
+            else if (strcmp(&argv[i][1], "mouth") == 0)
             {
-                SetMouth(atoi(argv[i+1]));
+                SetMouth(atoi(argv[i + 1]));
                 i++;
-            } else
-            if (strcmp(&argv[i][1], "throat")==0)
+            }
+            else if (strcmp(&argv[i][1], "throat") == 0)
             {
-                SetThroat(atoi(argv[i+1]));
+                SetThroat(atoi(argv[i + 1]));
                 i++;
-            } else
+            }
+            else
             {
                 PrintUsage();
                 return 1;
@@ -219,25 +235,30 @@ int main(int argc, char **argv)
         i++;
     } //while
 
-    for(i=0; input[i] != 0; i++)
+    for (i = 0; input[i] != 0; i++)
         input[i] = toupper((int)input[i]);
 
     if (debug)
     {
-        if (phonetic) printf("phonetic input: %s\n", input);
-        else printf("text input: %s\n", input);
+        if (phonetic)
+            printf("phonetic input: %s\n", input);
+        else
+            printf("text input: %s\n", input);
     }
 
     if (!phonetic)
     {
         strncat(input, "[", 256);
-        if (!TextToPhonemes((unsigned char *)input)) return 1;
+        if (!TextToPhonemes((unsigned char *)input))
+            return 1;
         if (debug)
             printf("phonetic input: %s\n", input);
-    } else strncat(input, "\x9b", 256);
+    }
+    else
+        strncat(input, "\x9b", 256);
 
 #ifdef USESDL
-    if ( SDL_Init(SDL_INIT_AUDIO) < 0 )
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
@@ -252,12 +273,23 @@ int main(int argc, char **argv)
         return 1;
     }
 
+#ifndef ESP_32
     if (wavfilename != NULL)
-        WriteWav(wavfilename, GetBuffer(), GetBufferLength()/50);
+        WriteWav(wavfilename, GetBuffer(), GetBufferLength() / 50);
     else
+#endif // ESP_32
         OutputSound();
 
-
     return 0;
-
 }
+
+#ifdef ESP_32
+
+void setup()
+{
+    Serial.begin(921600);
+    main(0,nullptr);
+}
+void loop() {}
+
+#endif
