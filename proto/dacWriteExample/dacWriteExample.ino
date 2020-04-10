@@ -36,7 +36,7 @@ void test1()
 void test2()
 {
   dacWrite(DAC1,value++);
-  delayMicroseconds(value>>3);
+  delayMicroseconds(50>>3);
 }
 
 void test3()

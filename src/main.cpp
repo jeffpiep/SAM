@@ -18,6 +18,14 @@
 #include <SDL_audio.h>
 #endif
 
+#ifdef ESP_32
+#define DAC1 25
+#endif
+
+#ifdef __cplusplus
+extern char input[256];
+#endif
+
 #ifndef ESP_32
 
 void WriteWav(char *filename, char *buffer, int bufferlength)
@@ -156,6 +164,13 @@ void OutputSound()
 
 void OutputSound()
 {
+    int n = GetBufferLength() / 50;
+    char *s = GetBuffer();
+    for (int i = 0; i < n; i++)
+    {
+        dacWrite(DAC1, s[i]);
+        delayMicroseconds(50);
+    }
 }
 
 #endif
@@ -167,8 +182,9 @@ int main(int argc, char **argv)
     int i;
     int phonetic = 0;
 
+#ifndef ESP_32
     char *wavfilename = NULL;
-    char input[256];
+#endif
 
     for (i = 0; i < 256; i++)
         input[i] = 0;
@@ -189,12 +205,17 @@ int main(int argc, char **argv)
         }
         else
         {
+
             if (strcmp(&argv[i][1], "wav") == 0)
             {
+#ifndef ESP_32
                 wavfilename = argv[i + 1];
+#endif
                 i++;
             }
-            else if (strcmp(&argv[i][1], "sing") == 0)
+            else
+
+                if (strcmp(&argv[i][1], "sing") == 0)
             {
                 EnableSingmode();
             }
@@ -236,6 +257,8 @@ int main(int argc, char **argv)
         i++;
     } //while
 
+    // printf("arg parsing done\n");
+
     for (i = 0; input[i] != 0; i++)
         input[i] = toupper((int)input[i]);
 
@@ -250,6 +273,7 @@ int main(int argc, char **argv)
     if (!phonetic)
     {
         strncat(input, "[", 256);
+        // printf("TextToPhonemes\n");
         if (!TextToPhonemes((unsigned char *)input))
             return 1;
         if (debug)
@@ -257,6 +281,8 @@ int main(int argc, char **argv)
     }
     else
         strncat(input, "\x9b", 256);
+
+        // printf("done phonetic processing\n");
 
 #ifdef USESDL
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
@@ -267,12 +293,18 @@ int main(int argc, char **argv)
     atexit(SDL_Quit);
 #endif
 
+#ifndef __cplusplus
     SetInput(input);
+#endif
+
+    // printf("right before SAMMain");
+
     if (!SAMMain())
     {
         PrintUsage();
         return 1;
     }
+    // printf("right after SAMMain");
 
 #ifndef ESP_32
     if (wavfilename != NULL)
@@ -286,10 +318,13 @@ int main(int argc, char **argv)
 
 #ifdef ESP_32
 
+int n = 3;
+char *a[5] = {"sam", "-debug", "I am Sam."};
+
 void setup()
 {
     Serial.begin(921600);
-    main(0,nullptr);
+    main(n, a);
 }
 void loop() {}
 
