@@ -2,12 +2,13 @@
 #define RECITER_C
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-//int TextToPhonemes(char *input, char *output);
+    //int TextToPhonemes(char *input, char *output);
 
-int TextToPhonemes(unsigned char *input);
+    int TextToPhonemes(unsigned char *input);
 
 #ifdef __cplusplus
 }

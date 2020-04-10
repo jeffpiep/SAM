@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 
 extern unsigned char signInputTable1[];
 extern unsigned char signInputTable2[];
@@ -12,18 +12,18 @@ void PrintPhonemes(unsigned char *phonemeindex, unsigned char *phonemeLength, un
     printf(" idx    phoneme  length  stress\n");
     printf("------------------------------\n");
 
-    while((phonemeindex[i] != 255) && (i < 255))
+    while ((phonemeindex[i] != 255) && (i < 255))
     {
         if (phonemeindex[i] < 81)
         {
             printf(" %3i      %c%c      %3i       %i\n",
-            phonemeindex[i],
-            signInputTable1[phonemeindex[i]],
-            signInputTable2[phonemeindex[i]],
-            phonemeLength[i],
-            stress[i]
-            );
-        } else
+                   phonemeindex[i],
+                   signInputTable1[phonemeindex[i]],
+                   signInputTable2[phonemeindex[i]],
+                   phonemeLength[i],
+                   stress[i]);
+        }
+        else
         {
             printf(" %3i      ??      %3i       %i\n", phonemeindex[i], phonemeLength[i], stress[i]);
         }
@@ -48,13 +48,12 @@ void PrintOutput(
     int i = 0;
     printf(" flags ampl1 freq1 ampl2 freq2 ampl3 freq3 pitch\n");
     printf("------------------------------------------------\n");
-    while(i < 255)
+    while (i < 255)
     {
         printf("%5i %5i %5i %5i %5i %5i %5i %5i\n", flag[i], a1[i], f1[i], a2[i], f2[i], a3[i], f3[i], p[i]);
         i++;
     }
     printf("===========================================\n");
-
 }
 
 extern unsigned char GetRuleByte(unsigned short mem62, unsigned char Y);
@@ -67,8 +66,11 @@ void PrintRule(int offset)
     do
     {
         A = GetRuleByte(offset, i);
-        if ((A&127) == '=') printf(" -> "); else printf("%c", A&127);
+        if ((A & 127) == '=')
+            printf(" -> ");
+        else
+            printf("%c", A & 127);
         i++;
-    } while ((A&128)==0);
+    } while ((A & 128) == 0);
     printf("\n");
 }

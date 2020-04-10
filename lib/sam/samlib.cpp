@@ -147,7 +147,7 @@ void OutputSound()
 
 void OutputSound()
 {
-    #ifdef ESP_32
+#ifdef ESP_32
     int n = GetBufferLength() / 50;
     char *s = GetBuffer();
     for (int i = 0; i < n; i++)
@@ -155,7 +155,7 @@ void OutputSound()
         dacWrite(DAC1, s[i]);
         delayMicroseconds(50);
     }
-    #endif
+#endif
 }
 
 #endif
@@ -298,5 +298,3 @@ int sam(int argc, char **argv)
 
     return 0;
 }
-
-

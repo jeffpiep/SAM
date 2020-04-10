@@ -38,4 +38,3 @@ void OutputSound();
 #endif
 
 int sam(int argc, char **argv);
-

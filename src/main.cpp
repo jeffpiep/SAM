@@ -2,11 +2,6 @@
 #include <Arduino.h>
 #endif
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <ctype.h>
-// #include <string.h>
-
 #include "samlib.h"
 
 #ifdef ESP_32
@@ -25,7 +20,7 @@ void loop() {}
 
 int main(int argc, char **argv)
 {
-    return sam(argc,argv);
+    return sam(argc, argv);
 }
 
 #endif
