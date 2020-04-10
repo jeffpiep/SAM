@@ -59,7 +59,8 @@ void WriteWav(char *filename, char *buffer, int bufferlength)
 
 void PrintUsage()
 {
-    printf("usage: sam [options] Word1 Word2 ....\n");
+    printf("\n");
+    printf("Usage: sam [options] Word1 Word2 ....\n");
     printf("options\n");
     printf("    -phonetic         enters phonetic mode. (see below)\n");
     printf("    -pitch number        set pitch value (default=64)\n");
