@@ -8,9 +8,9 @@
 extern char input[256];
 #endif
 
-#ifndef ESP_32
-
 int debug = 0;
+
+#ifndef ESP_32
 
 void WriteWav(char *filename, char *buffer, int bufferlength)
 {
