@@ -153,7 +153,7 @@ void OutputSound()
     for (int i = 0; i < n; i++)
     {
         dacWrite(DAC1, s[i]);
-        delayMicroseconds(25);
+        delayMicroseconds(40);
     }
 #endif
 }
